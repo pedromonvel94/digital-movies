@@ -34,7 +34,8 @@ app.get("/health", (req, res) => { //El get lo que hace es solicitar un recurso,
 }) // Este get significa que cuando entremos a https://localhost:3000 y al final le  coloque la "/health" dejandolo https://localhost:3001/health, significa que vamos a estar enviando una peticion get hacia esa direccion, y esa peticion la vamos a estar gestionando desde la funcion donde recibo los req y res
 
 app.get("/api/generos", (req, res) => {
-
+    res("Hola mundo")
+    res.send("<h1>Hola mundo</h1>")
 })
 
 app.get("/genero", (req, res) => {
