@@ -10,6 +10,6 @@ export async function connectMongo() {
         await mongoose.connect(uri);
         console.log("✅ MongoDB conectado");
     } catch(e){
-        throw new Error("El error es: " + e);
+        console.error("Se presento un error en la conexion con MongoDB: ", e);
     }
 }
