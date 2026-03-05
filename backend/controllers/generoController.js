@@ -17,50 +17,60 @@
         Si quieres hacerlo más profesional luego, lo separamos.
 */
 
-import { Router } from "express";
 import { Genero } from "../models/Genero.js";
 
-const router = Router();
-
-// GET /api/generos?estado=ACTIVO
-router.get("/", async (req, res) => {
-  const filtro = {};
-  if (req.query.estado) filtro.estado = req.query.estado;
-  const generos = await Genero.find(filtro).sort({ createdAt: -1 });
-  res.json(generos);
-});
+// GET, metodo para obtener todos los generos
+const getGenero = async (req, res) => {
+  try{
+		const generos = await Genero.find();
+		res.status(200).json(generos);
+	}catch{
+		console.log("Error al obtener generos", error);
+		res.status(500).json({ msg: "Ocurrio un error al listar los generos" })
+	}
+};
 
 // GET /api/generos/:id
-router.get("/:id", async (req, res) => {
+const getGeneroById = async (req, res) => {
   const genero = await Genero.findById(req.params.id);
   if (!genero) return res.status(404).json({ message: "Género no encontrado" });
   res.json(genero);
-});
+};
 
-// POST /api/generos
-router.post("/", async (req, res) => {
-  const { nombre, estado, descripcion } = req.body;
-  if (!nombre) return res.status(400).json({ message: "nombre es requerido" });
+// POST, metodo para crear un nuevo genero
+const createGenero = async (req, res) => {
+  try{
+		const {nombre, estado, descripcion} = req.body;
+		
+		const generoDB = await Genero.findOne({ nombre });
+		if(generoDB){
+			return res.status(400).json({ msg: `El género "${nombre}" ya existe.` });
+		}
+		const genero = new Genero({ nombre, estado, descripcion });
 
-  const nuevo = await Genero.create({ nombre, estado, descripcion });
-  res.status(201).json(nuevo);
-});
+    await genero.save();
+    res.status(201).json(genero);
+	}catch(error){
+		console.error('❌ Error al crear género:', error);
+    res.status(500).json({ msg: 'Ocurrió un error al guardar el género' })
+	}
+};
 
 // PUT /api/generos/:id
-router.put("/:id", async (req, res) => {
+const updateGenero = async (req, res) => {
   const actualizado = await Genero.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
   });
   if (!actualizado) return res.status(404).json({ message: "Género no encontrado" });
   res.json(actualizado);
-});
+};
 
 // DELETE /api/generos/:id
-router.delete("/:id", async (req, res) => {
+const deleteGenero = async (req, res) => {
   const eliminado = await Genero.findByIdAndDelete(req.params.id);
   if (!eliminado) return res.status(404).json({ message: "Género no encontrado" });
   res.json({ message: "Género eliminado" });
-});
+};
 
-export default router;
+export { getGenero, getGeneroById, createGenero, updateGenero, deleteGenero };
