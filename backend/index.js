@@ -2,7 +2,12 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import connectMongo from "./db/db.js"; //importamos la funcion que se encarga de conectar a la base de datos, esta funcion la encontramos en el archivo db.js que esta dentro de la carpeta db
+import { connectMongo } from "./db/mongo.js"; //importamos la funcion que se encarga de conectar a la base de datos, esta funcion la encontramos en el archivo db.js que esta dentro de la carpeta db
+import generoRoutes from "./routes/genero.js";
+import directorRoutes from "./routes/director.js";
+import productoraRoutes from "./routes/productora.js";
+import tipoRoutes from "./routes/tipo.js";
+import mediaRoutes from "./routes/media.js";
 
 dotenv.config(); //esto lo que hace es cargar las variables de entorno que tenemos en el archivo .env
 const app = express(); //1. Creamos una instancia de nuestra aplicacion
@@ -12,7 +17,11 @@ app.use(express.json()); //esto lo que hace es decirle a express que vamos a est
 app.use(cors());
 
 /* ROUTES */
-app.use("/api/generos", require("./routes/genero.js").default); //esto lo que hace es decirle a nuestra aplicacion que cada vez que recibamos una peticion a la ruta "/api/generos", entonces vamos a usar el router que tenemos definido en el archivo genero.js, que lo encontramos en /routes/genero.js y el cual se encarga de manejar las rutas relacionadas con los generos
+app.use("/api/generos", generoRoutes);
+app.use("/api/directores", directorRoutes);
+app.use("/api/productoras", productoraRoutes);
+app.use("/api/tipos", tipoRoutes);
+app.use("/api/media", mediaRoutes);
 
 connectMongo(); //llamamos a la funcion que se encarga de conectar a la base de datos, esta funcion la encontramos en el archivo db.js que esta dentro de la carpeta db
 
