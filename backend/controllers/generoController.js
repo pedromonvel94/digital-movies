@@ -24,7 +24,7 @@ const getGenero = async (req, res) => {
   try{
 		const generos = await Genero.find();
 		res.status(200).json(generos);
-	}catch{
+	}catch(error){
 		console.log("Error al obtener generos", error);
 		res.status(500).json({ msg: "Ocurrio un error al listar los generos" })
 	}
@@ -58,10 +58,9 @@ const createGenero = async (req, res) => {
 
 // PUT (UPDATE) metodo para actualizar un genero por su id
 const updateGenero = async (req, res) => {
-  const actualizado = await Genero.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
+  const actualizado = await Genero.findByIdAndUpdate(req.params.id, req.body, 
+    {$set: {...req.body, fechaActualizacion: Date.now()}}, //Investigamos que estabamos teniendo un problema, y es que al actualizar no se estaba actualizando la fecha a la nueva fecha de actualizacion, entonces lo que hicimos fue agregar un nuevo objeto dentro de las opciones del findByIdAndUpdate, el cual se llama $set, este objeto se encarga de actualizar los campos que le indiquemos, en este caso le indicamos que actualice todos los campos que le lleguen en el cuerpo de la peticion (req.body) y ademas le indicamos que actualice el campo fechaActualizacion con la fecha y hora actual (Date.now())
+    {new: true,runValidators: true,});
   if (!actualizado) return res.status(404).json({ message: "Género no encontrado" });
   res.json(actualizado);
 };
