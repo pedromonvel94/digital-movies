@@ -30,7 +30,7 @@ const getGenero = async (req, res) => {
 	}
 };
 
-// GET /api/generos/:id
+// GET, metodo para obtener un genero por su id
 const getGeneroById = async (req, res) => {
   const genero = await Genero.findById(req.params.id);
   if (!genero) return res.status(404).json({ message: "Género no encontrado" });
@@ -56,7 +56,7 @@ const createGenero = async (req, res) => {
 	}
 };
 
-// PUT /api/generos/:id
+// PUT (UPDATE) metodo para actualizar un genero por su id
 const updateGenero = async (req, res) => {
   const actualizado = await Genero.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
@@ -66,7 +66,7 @@ const updateGenero = async (req, res) => {
   res.json(actualizado);
 };
 
-// DELETE /api/generos/:id
+// DELETE metodo para eliminar un genero por su id
 const deleteGenero = async (req, res) => {
   const eliminado = await Genero.findByIdAndDelete(req.params.id);
   if (!eliminado) return res.status(404).json({ message: "Género no encontrado" });
